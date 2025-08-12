@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             AgentUserSeeder::class,
             EnquirySeeder::class,
+            ItinerarySeeder::class,
         ]);
     }
 }

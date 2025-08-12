@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Enquiry extends Model
 {
@@ -27,7 +28,7 @@ class Enquiry extends Model
         'travel_end_date' => 'date:Y-m-d'
     ];
 
-    public function assignedAgent()
+    public function assignedAgent(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_agent_id');
     }
@@ -53,5 +54,10 @@ class Enquiry extends Model
             $q->where('name', 'like', "%$term%")
                 ->orWhere('email', 'like', "%$term%");
         });
+    }
+
+    public function itineraries()
+    {
+        return $this->hasMany(Itinerary::class);
     }
 }
