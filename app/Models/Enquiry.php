@@ -17,7 +17,8 @@ class Enquiry extends Model
         'number_of_people',
         'preferred_destinations',
         'budget',
-        'status'
+        'status',
+        'assigned_agent_id'
     ];
 
     protected $casts = [
@@ -25,4 +26,32 @@ class Enquiry extends Model
         'travel_start_date' => 'date:Y-m-d',
         'travel_end_date' => 'date:Y-m-d'
     ];
+
+    public function assignedAgent()
+    {
+        return $this->belongsTo(User::class, 'assigned_agent_id');
+    }
+
+    public function scopeAssignedTo($query, $agentId)
+    {
+        return $query->where('assigned_agent_id', $agentId);
+    }
+
+    public function scopeStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
+
+    public function scopeDateRange($query, $from, $to)
+    {
+        return $query->whereBetween('created_at', [$from, $to]);
+    }
+
+    public function scopeSearch($query, $term)
+    {
+        return $query->where(function ($q) use ($term) {
+            $q->where('name', 'like', "%$term%")
+                ->orWhere('email', 'like', "%$term%");
+        });
+    }
 }

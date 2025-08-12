@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AssignEnquiryRequest;
 use App\Http\Requests\StoreEnquiryRequest;
+use App\Http\Requests\UpdateEnquiryStatusRequest;
 use App\Models\Enquiry;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -12,9 +14,34 @@ class EnquiryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
+        $query = Enquiry::query();
+
+        // Apply filters
+        if ($request->status) {
+            $query->status($request->status);
+        }
+
+        if ($request->assigned_to) {
+            $query->assignedTo($request->assigned_to);
+        }
+
+        if ($request->from && $request->to) {
+            $query->dateRange($request->from, $request->to);
+        }
+
+        if ($request->search) {
+            $query->search($request->search);
+        }
+
+        // Authorization filter
+        if (auth()->user()->role === 'agent') {
+            $query->where('assigned_agent_id', auth()->id());
+        }
+
+        return $query->paginate(15);
     }
 
     /**
@@ -46,6 +73,26 @@ class EnquiryController extends Controller
     }
 
 
+    public function assign(AssignEnquiryRequest $request, Enquiry $enquiry)
+    {
+        $enquiry->update(['assigned_agent_id' => $request->agent_id]);
+
+        return response()->json([
+            'message' => 'Enquiry assigned successfully',
+            'data' => $enquiry
+        ]);
+    }
+
+    public function updateStatus(UpdateEnquiryStatusRequest $request, Enquiry $enquiry)
+    {
+        Log::info('Test log entry for Telescope');
+        $enquiry->update(['status' => $request->status]);
+
+        return response()->json([
+            'message' => 'Status updated successfully',
+            'data' => $enquiry
+        ]);
+    }
     /**
      * Display the specified resource.
      */

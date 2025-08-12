@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->role === 'agent';
     }
+
+    public function assignedEnquiries()
+    {
+        return $this->hasMany(Enquiry::class, 'assigned_agent_id');
+    }
 }

@@ -11,9 +11,19 @@ Route::get('/user', function (Request $request) {
 
 
 Route::prefix('auth')->group(function () {
+    //registration
     Route::post('/register', [AuthController::class, 'register'])->middleware('auth:sanctum');
+    //login
     Route::post('/login', [AuthController::class, 'login']);
+    //logout
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 });
 
+//enquiries creation
 Route::post('/enquiries', [EnquiryController::class, 'store']);
+
+Route::get('/enquiries', [EnquiryController::class, 'index'])->middleware('auth:sanctum');
+
+Route::put('/enquiries/{enquiry}/assign', [EnquiryController::class, 'assign'])->middleware('auth:sanctum');
+
+Route::patch('/enquiries/{enquiry}/status', [EnquiryController::class, 'updateStatus'])->middleware('auth:sanctum');

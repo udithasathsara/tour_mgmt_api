@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Enquiry;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -37,8 +38,9 @@ class EnquiryFactory extends Factory
                 )
             ),
             'budget' => $this->faker->randomFloat(2, 500, 5000),
-            'status' => $this->faker->randomElement(['pending', 'processing', 'completed']),
+            'status' => $this->faker->randomElement(['pending', 'in-progress']),
             'created_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
+            'assigned_agent_id' => User::factory()->agent()
         ];
     }
 
