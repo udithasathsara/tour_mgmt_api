@@ -54,12 +54,10 @@ return [
 
         'stack' => [
             'driver' => 'stack',
-            'channels' => ['single', 'telescope'],
+            'channels' => explode(',', (string) env('LOG_STACK', 'single')),
             'ignore_exceptions' => false,
         ],
-        'telescope' => [
-            'driver' => 'telescope',
-        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),
