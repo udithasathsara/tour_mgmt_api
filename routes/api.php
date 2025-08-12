@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EnquiryController;
 use App\Http\Controllers\ItineraryController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\QuotationController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -42,3 +44,17 @@ Route::put('/itineraries/{itinerary}', [ItineraryController::class, 'update'])->
 Route::patch('/itineraries/{itinerary}', [ItineraryController::class, 'update'])->middleware('auth:sanctum');
 //delete itinerary
 Route::delete('/itineraries/{itinerary}', [ItineraryController::class, 'destroy'])->middleware('auth:sanctum');
+
+
+
+// Quotation routes
+Route::post('/quotations', [QuotationController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/quotations', [QuotationController::class, 'index'])->middleware('auth:sanctum');
+Route::get('/quotations/{quotation}', [QuotationController::class, 'show'])->middleware('auth:sanctum');
+
+// Payment routes
+Route::get('/payments', [PaymentController::class, 'index'])->middleware('auth:sanctum');
+Route::post('/payments', [PaymentController::class, 'store'])->middleware('auth:sanctum');
+
+// Public route
+Route::get('/quotations/public/{uniqueId}', [QuotationController::class, 'publicShow']);
