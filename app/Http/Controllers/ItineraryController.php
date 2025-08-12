@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItineraryRequest;
 use App\Http\Requests\UpdateItineraryRequest;
+use App\Models\Enquiry;
 use App\Models\Itinerary;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -34,6 +35,14 @@ class ItineraryController extends Controller
      */
     public function store(StoreItineraryRequest $request)
     {
+        $enquiry = Enquiry::find($request->enquiry_id);
+
+        if (!($enquiry->assigned_agent_id === $request->user()->id)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Only assigned agent can create itinerary'
+            ], 403);
+        }
         //
         $itinerary = Itinerary::create([
             'enquiry_id' => $request->enquiry_id,
@@ -62,6 +71,13 @@ class ItineraryController extends Controller
      */
     public function update(UpdateItineraryRequest $request, Itinerary $itinerary)
     {
+        if (!(auth()->user()->role === 'admin' ||
+            $enquiry->assigned_agent_id === auth()->id())) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized to update enquiry status'
+            ], 403);
+        }
         //
         $itinerary->update($request->validated());
         return response()->json($itinerary);

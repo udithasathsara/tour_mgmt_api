@@ -75,6 +75,13 @@ class EnquiryController extends Controller
 
     public function assign(AssignEnquiryRequest $request, Enquiry $enquiry)
     {
+        if (auth()->user()->role !== 'admin') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Only admin can assign enquiries'
+            ], 403);
+        }
+
         $enquiry->update(['assigned_agent_id' => $request->agent_id]);
 
         return response()->json([
@@ -85,6 +92,14 @@ class EnquiryController extends Controller
 
     public function updateStatus(UpdateEnquiryStatusRequest $request, Enquiry $enquiry)
     {
+        if (!(auth()->user()->role === 'admin' ||
+            $enquiry->assigned_agent_id === auth()->id())) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Unauthorized to update enquiry status'
+            ], 403);
+        }
+
         Log::info('Test log entry for Telescope');
         $enquiry->update(['status' => $request->status]);
 

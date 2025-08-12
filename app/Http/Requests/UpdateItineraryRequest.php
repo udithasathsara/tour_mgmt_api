@@ -14,8 +14,7 @@ class UpdateItineraryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->role === 'admin' ||
-            $this->route('itinerary')->agent_id === $this->user()->id;
+        return true;
     }
 
     /**

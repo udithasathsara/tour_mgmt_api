@@ -16,10 +16,7 @@ class StoreItineraryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $enquiry = Enquiry::find($this->enquiry_id);
-        return $enquiry &&
-            $this->user() &&
-            $enquiry->assigned_agent_id === $this->user()->id;
+        return true;
     }
 
     /**

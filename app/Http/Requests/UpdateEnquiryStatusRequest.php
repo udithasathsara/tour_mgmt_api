@@ -14,9 +14,7 @@ class UpdateEnquiryStatusRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        $enquiry = $this->route('enquiry');
-        return auth()->user()->role === 'admin' ||
-            $enquiry->assigned_agent_id === auth()->id();
+        return true;
     }
 
     /**
