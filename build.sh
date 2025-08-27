@@ -1,14 +1,18 @@
 #!/usr/bin/env bash
-# build.sh
+echo "Starting build process..."
 
-echo "Running composer install..."
-composer install --no-dev --working-dir=/opt/render/project/src --optimize-autoloader
+# Install dependencies
+composer install --no-dev --optimize-autoloader
 
-echo "Caching config..."
+# Generate app key if not exists
+if [ ! -f ".env" ]; then
+    cp .env.example .env
+fi
+
+# Clear and cache config
+php artisan config:clear
 php artisan config:cache
-
-echo "Caching routes..."
 php artisan route:cache
+php artisan view:cache
 
-echo "Running migrations..."
-php artisan migrate --force
+echo "Build completed successfully!"

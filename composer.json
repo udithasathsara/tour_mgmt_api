@@ -39,6 +39,8 @@
     },
     "scripts": {
         "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi",
             "@php artisan config:clear",
             "@php artisan clear-compiled",
             "@php artisan package:discover --ansi"
@@ -62,10 +64,13 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
-        "post-install-cmd": [
-            "php artisan clear-compiled",
-            "chmod -R 755 storage",
-            "php artisan passport:keys"
+        "railway-build": [
+            "chmod +x build.sh",
+            "./build.sh"
+        ],
+        "railway-start": [
+            "chmod +x start.sh", 
+            "./start.sh"
         ]
     },
     "extra": {
