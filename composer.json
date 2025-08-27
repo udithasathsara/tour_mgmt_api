@@ -12,11 +12,12 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
+        "laravel/telescope": "^5.11",
         "laravel/tinker": "^2.10.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
-        "laravel/pail": "^1.2.2",
+        "laravel/pail": "^1.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
         "mockery/mockery": "^1.6",
@@ -60,6 +61,11 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "post-install-cmd": [
+            "php artisan clear-compiled",
+            "chmod -R 755 storage",
+            "php artisan passport:keys"
         ]
     },
     "extra": {
